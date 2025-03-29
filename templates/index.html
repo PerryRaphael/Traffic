@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Classifier</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Traffic Sign Classifier</h1>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button onclick="uploadImage()">Predict</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function uploadImage() {
+            const fileInput = document.getElementById("imageUpload");
+            const resultDiv = document.getElementById("result");
+
+            if (fileInput.files.length === 0) {
+                resultDiv.innerHTML = "Please upload an image!";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            fetch("http://localhost:5000/predict", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.innerHTML = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                resultDiv.innerHTML = "Error making prediction!";
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>
